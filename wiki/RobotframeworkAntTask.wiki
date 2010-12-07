@@ -16,7 +16,7 @@
 Ant task definition for `RobotAnt`:
 
 {{{
-<taskdef name="robotframework"
+<taskdef name="robotant"
    classname="org.lcx.robotframework.ant.RobotAnt"
    classpath="ant-robotframework-<version>.jar"/>
 
@@ -34,12 +34,12 @@ robotframework-2.5.4.1.jar must be at root folder of the ant basedir.
 == Fork mode ==
 By default it uses the -jar option in fork mode (external VM)
 {{{
-<robotframework data_sources="Test.html">
+<robotant data_sources="Test.html">
   <arg line="--help"/>
   <bootclasspath>
    <pathelement location="lib/selenium-server.jar"/>
   </bootclasspath>
-</robotframework>
+</robotant>
 }}}
 
 This will do the same as :
@@ -48,12 +48,12 @@ This will do the same as :
 == Unfork mode ==
 If fork is set to false, then class mode will be used
 {{{
-<robotframework data_sources="Test.html" fork="false">
+<robotant data_sources="Test.html" fork="false">
   <arg line="--help"/>
   <classpath>
    <pathelement location="lib/selenium-server.jar"/>
   </classpath>
-</robotframework>
+</robotant>
 }}}
 This will do the same as :
 
@@ -63,12 +63,12 @@ This will do the same as :
 As per java task, you can specify the jar RobotAnt task should use to replace default ones.
 Use "jar" task attribute
 {{{
-<robotframework data_sources="Test.html" jar="path/myrobotjar.jar">
+<robotant data_sources="Test.html" jar="path/myrobotjar.jar">
   <arg line="--help"/>
   <bootclasspath>
    <pathelement location="lib/selenium-server.jar"/>
   </bootclasspath>
-</robotframework>
+</robotant>
 }}}
 
 also you could change in robotant.properties file inside `RobotAnt` jar file
@@ -87,7 +87,7 @@ also you could change in robotant.properties file inside `RobotAnt` jar file
 
 Complete sample:
 {{{
-<robotframework 
+<robotant 
     jar="robotframework-selenium-2.5.4.1.jar"
     data_sources="TestSelenium.html"
     name="TestExecution Result"
@@ -102,7 +102,7 @@ Complete sample:
    <pathelement location="lib/selenium-server.jar"/>
   </bootclasspath>
   <arg line="--variable str:Hello"/>
-</robotframework>
+</robotant>
 
 }}}
 
