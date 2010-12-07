@@ -57,13 +57,13 @@
 
 
 	<target name="declare" depends="createjar">
-		<taskdef name="robotframework"
+		<taskdef name="robotant"
         classname="org.lcx.robotframework.ant.RobotAnt"
         classpath="${dist}/${jarfile}"/>
 	</target>
 
 	<target name="cplxjar" depends="declare">
-		<robotframework 
+		<robotant 
         jar="robotframework-selenium-2.5.4.1.jar"
         data_sources="TestSelenium.html"
 		name="TestExecution Result"
@@ -76,37 +76,37 @@
         >
 			<arg line="--version"/>
             <arg line="--variable str:Hello"/>
-		</robotframework>
+		</robotant>
 	</target>
 
 	<target name="simpleclass" depends="declare">
-		<robotframework fork="false">
+		<robotant fork="false">
 			<arg line="--loglevel TRACE"/>
 			<arg line="TestSelenium.html"/>
 			<classpath>
 				<pathelement location="lib/selenium-server.jar"/>
 			</classpath>
-		</robotframework>
+		</robotant>
 	</target>
 
 	<target name="jarbootclass" depends="declare">
-		<robotframework fork="true">
+		<robotant fork="true">
 			<arg line="--loglevel TRACE"/>
 			<arg line="TestSelenium.html"/>
 			<bootclasspath>
 				<pathelement location="lib/selenium-server.jar"/>
 			</bootclasspath>
-		</robotframework>
+		</robotant>
 	</target>
 
 	<target name="simplejar" depends="declare">
-		<robotframework>
+		<robotant>
 			<arg line="--loglevel TRACE"/>
 			<arg line="TestSelenium.html"/>
 			<bootclasspath>
 				<pathelement location="lib/selenium-server.jar"/>
 			</bootclasspath>
-		</robotframework>
+		</robotant>
 	</target>
 
     <target name="alljar" depends="simplejar, cplxjar, jarbootclass"/>
