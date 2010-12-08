@@ -36,14 +36,14 @@ By default it uses the -jar option in fork mode (external VM)
 {{{
 <robotant data_sources="Test.html">
   <arg line="--help"/>
-  <bootclasspath>
+  <classpath>
    <pathelement location="lib/selenium-server.jar"/>
-  </bootclasspath>
+  </classpath>
 </robotant>
 }}}
 
 This will do the same as :
-{{{java -Xbootclasspath lib/selenium-server.jar -jar robotframework-2.5.4.1.jar --help Test.html}}}
+{{{java -classpath lib/selenium-server.jar -jar robotframework-2.5.4.1.jar --help Test.html}}}
 
 == Unfork mode ==
 If fork is set to false, then class mode will be used
@@ -65,9 +65,9 @@ Use "jar" task attribute
 {{{
 <robotant data_sources="Test.html" jar="path/myrobotjar.jar">
   <arg line="--help"/>
-  <bootclasspath>
+  <classpath>
    <pathelement location="lib/selenium-server.jar"/>
-  </bootclasspath>
+  </classpath>
 </robotant>
 }}}
 
@@ -108,9 +108,9 @@ Complete sample:
     >
   <argumentfile file="first.txt"/>
   <data_source file="AnotherTest.html/>
-  <bootclasspath>
+  <classpath>
    <pathelement location="lib/selenium-server.jar"/>
-  </bootclasspath>
+  </classpath>
   <arg line="--variable str:Hello"/>
 </robotant>
 
