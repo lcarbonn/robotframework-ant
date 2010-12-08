@@ -135,27 +135,75 @@ public class RobotAntTest extends TestCase {
 		rf.setData_sources("1");
 		rf.setDebugfile("2");
 		rf.setLoglevel("3");
-		rf.setName("4");
+		rf.setName("44 44");
 		rf.setVariablefile("5");
-		rf.setTest("6");
-		rf.setSuite("7");
+		rf.setTest("66 66");
+		rf.setSuite("77 77");
 		rf.setOutputdir("8");
 
 		rf.setArguments();
 
-		assertEquals("1", rf.getData_sources());
+		assertEquals(1, rf.getData_sources().length);
+		assertEquals("1", rf.getData_sources()[0]);
+		
 		assertEquals("2", rf.getDebugfile());
 		assertEquals("3", rf.getLoglevel());
-		assertEquals("4", rf.getName());
+		assertEquals("44 44", rf.getName());
 		assertEquals("5", rf.getVariablefile());
-		assertEquals("6", rf.getTest());
-		assertEquals("7", rf.getSuite());
+		assertEquals("66 66", rf.getTest());
+		assertEquals("77 77", rf.getSuite());
 		assertEquals("8", rf.getOutputdir());
+
 		String comline = "";
 		for(String s : rf.getCommandLine().getCommandline()) {
 			comline = comline + s +" ";
 		}
 		System.out.println(comline);
-		assertTrue(comline.endsWith("--name 4 --variablefile 5 --loglevel 3 --debugfile 2 --outputdir 8 --suite 7 --test 6 1 "));
+		assertTrue(comline.endsWith("--name '44 44' --variablefile 5 --loglevel 3 --debugfile 2 --outputdir 8 --suite '77 77' --test '66 66' 1 "));
+	}
+
+	public void testArgumentFile() {
+		RobotAnt rf = new RobotAnt();
+		// case jar and fork false
+		rf.setData_sources("datasource");
+		rf.createArgumentfile().setFile("1");
+		rf.createArgumentfile().setFile("2");
+
+		rf.setArguments();
+
+		assertNotNull(rf.getArgumentfiles());
+		assertEquals(2, rf.getArgumentfiles().length);
+
+		String comline = "";
+		for(String s : rf.getCommandLine().getCommandline()) {
+			comline = comline + s +" ";
+		}
+		System.out.println(comline);
+		assertTrue(comline.endsWith(" --argumentfile 1 --argumentfile 2 datasource "));
+	}
+
+	public void testDataSource() {
+		RobotAnt rf = new RobotAnt();
+		// case jar and fork false
+		rf.setData_sources("datasource");
+		rf.createData_source().setFile("dt2.html");
+		rf.createData_source().setFile("dt3.html");
+		rf.createData_source().setFile("dt4.html");
+		rf.createData_source().setFile("dt5.html");
+		rf.createData_source().setFile("dt6.html");
+		rf.createData_source().setFile("dt7.html");
+		rf.createData_source().setFile("dt8.html");
+
+		rf.setArguments();
+
+		assertNotNull(rf.getData_sources());
+		assertEquals(8, rf.getData_sources().length);
+
+		String comline = "";
+		for(String s : rf.getCommandLine().getCommandline()) {
+			comline = comline + s +" ";
+		}
+		System.out.println(comline);
+		assertTrue(comline.endsWith(" datasource dt2.html dt3.html dt4.html dt5.html dt6.html dt7.html dt8.html "));
 	}
 }
