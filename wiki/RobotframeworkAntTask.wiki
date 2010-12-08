@@ -73,7 +73,7 @@ Use "jar" task attribute
 
 also you could change in robotant.properties file inside `RobotAnt` jar file
 
-= Parameters =
+= Task Options=
 `RobotAnt` propose some Robotframework [http://robotframework.googlecode.com/svn/tags/robotframework-2.5.4/doc/userguide/RobotFrameworkUserGuide.html#configuring-execution options] to be set as task attributes:
 
 || *Attribute* || *Description* || *Required* ||
@@ -111,3 +111,8 @@ Other Robotframework options can be set using *arg with line* attribute:
    <arg line="--help"/>
    <arg line="--variable str:Hello"/>
 }}}
+
+= Fail on error =
+By default `RobotAnt`, like `java` task, doesn't stop on execution error.
+If you want your build to stop in case of a test error, set `failonerror="true"`
+See [http://ant.apache.org/manual/Tasks/java.html#failonerror Ant note]
