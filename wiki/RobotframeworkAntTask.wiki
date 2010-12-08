@@ -85,7 +85,9 @@ also you could change in robotant.properties file inside `RobotAnt` jar file
 || outputdir || set the --outputdir option || No || 0.1 ||
 || loglevel || set the --loglevel option || No || 0.1 ||
 || debugfile || set the --debugfile option || No || 0.1 ||
-and inner elements
+
+and inner elements:
+
 || *Element* || *Attribute* || *Description* || *Required* || *available in version* ||
 || data_source || file || add a data_source to data_sources || No || 0.2 ||
 || argumentfile || file || add a --argumentfile option || No || 0.2 ||
