@@ -59,8 +59,8 @@ This will do the same as :
 
 {{{java -classpath lib/selenium-server.jar:robotframework-2.5.4.1.jar org.robotframework.RobotFramework --help Test.html}}}
 
-== Specific a specific jar ==
-As per java task, you can specify the jar RobotAnt task should use to replace default ones.
+== Using a specific jar ==
+As per java task, you can specify the jar `RobotAnt` task should use to replace default ones.
 Use "jar" task attribute
 {{{
 <robotant data_sources="Test.html" jar="path/myrobotjar.jar">
@@ -76,14 +76,20 @@ also you could change in robotant.properties file inside `RobotAnt` jar file
 = Task Options=
 `RobotAnt` propose some Robotframework [http://robotframework.googlecode.com/svn/tags/robotframework-2.5.4/doc/userguide/RobotFrameworkUserGuide.html#configuring-execution options] to be set as task attributes:
 
-|| *Attribute* || *Description* || *Required* ||
-|| name || set the --name option || No ||
-|| suite || set the --suite option || No ||
-|| test || set the --test option || No ||
-|| variablefile || set the --variablefile option || No ||
-|| outputdir || set the --outputdir option || No ||
-|| loglevel || set the --loglevel option || No ||
-|| debugfile || set the --debugfile option || No ||
+|| *Attribute* || *Description* || *Required* || *available in version* ||
+|| data_sources || to use as data_sources || No || 0.1 ||
+|| name || set the --name option || No || 0.1 ||
+|| suite || set the --suite option || No || 0.1 ||
+|| test || set the --test option || No || 0.1 ||
+|| variablefile || set the --variablefile option || No || 0.1 ||
+|| outputdir || set the --outputdir option || No || 0.1 ||
+|| loglevel || set the --loglevel option || No || 0.1 ||
+|| debugfile || set the --debugfile option || No || 0.1 ||
+and inner elements
+|| *Element* || *Attribute* || *Description* || *Required* || *available in version* ||
+|| data_source || file || add a data_source to data_sources || No || 0.2 ||
+|| argumentfile || file || add a --argumentfile option || No || 0.2 ||
+
 
 Complete sample:
 {{{
@@ -98,6 +104,8 @@ Complete sample:
     test="'Test search on google'"
     variablefile="path/vars.py"
     >
+  <argumentfile file="first.txt"/>
+  <data_source file="AnotherTest.html/>
   <bootclasspath>
    <pathelement location="lib/selenium-server.jar"/>
   </bootclasspath>
@@ -112,7 +120,7 @@ Other Robotframework options can be set using *arg with line* attribute:
    <arg line="--variable str:Hello"/>
 }}}
 
-= Fail on error =
+== Fail on error ==
 By default `RobotAnt`, like `java` task, doesn't stop on execution error.
 If you want your build to stop in case of a test error, set `failonerror="true"`
 See [http://ant.apache.org/manual/Tasks/java.html#failonerror Ant note]
