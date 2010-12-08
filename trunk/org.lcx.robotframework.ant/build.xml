@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="RobotAnt" default="all" basedir=".">
+<project name="RobotAnt" default="alljar" basedir=".">
 
 	<description>
         build file for RobotFramework Ant task
@@ -64,8 +64,8 @@
 
 	<target name="cplxjar" depends="declare">
 		<robotant 
-        jar="robotframework-selenium-2.5.4.1.jar"
-        data_sources="TestSelenium.html"
+        jar="libext/robotframework-selenium-2.5.4.1.jar"
+        data_sources="rftest/TestSelenium.html"
 		name="TestExecution Result"
         loglevel="TRACE"
         debugfile="jybot.log"
@@ -84,7 +84,7 @@
 			<arg line="--loglevel TRACE"/>
 			<arg line="TestSelenium.html"/>
 			<classpath>
-				<pathelement location="lib/selenium-server.jar"/>
+				<pathelement location="libext/selenium-server.jar"/>
 			</classpath>
 		</robotant>
 	</target>
@@ -92,9 +92,9 @@
 	<target name="jarbootclass" depends="declare">
 		<robotant fork="true">
 			<arg line="--loglevel TRACE"/>
-			<arg line="TestSelenium.html"/>
+			<arg line="rftest/TestSelenium.html"/>
 			<bootclasspath>
-				<pathelement location="lib/selenium-server.jar"/>
+				<pathelement location="libext/selenium-server.jar"/>
 			</bootclasspath>
 		</robotant>
 	</target>
@@ -102,30 +102,51 @@
 	<target name="simplejar" depends="declare">
 		<robotant>
 			<arg line="--loglevel TRACE"/>
-			<arg line="TestSelenium.html"/>
+			<arg line="rftest/TestSelenium.html"/>
 			<bootclasspath>
-				<pathelement location="lib/selenium-server.jar"/>
+				<pathelement location="libext/selenium-server.jar"/>
 			</bootclasspath>
 		</robotant>
 	</target>
 
-    <target name="alljar" depends="simplejar, cplxjar, jarbootclass"/>
+    <target name="simplejarargfile" depends="declare">
+        <robotant data_sources="rftest/TestSelenium.html">
+            <argumentfile file="rftest/first.txt"/>
+            <argumentfile file="rftest/second.txt"/>
+            <bootclasspath>
+                <pathelement location="libext/selenium-server.jar"/>
+            </bootclasspath>
+        </robotant>
+    </target>
+
+    <target name="datasource" depends="declare">
+        <robotant data_sources="rftest/TestSelenium.html" jar="libext/robotframework-selenium-2.5.4.1.jar">
+            <data_source file="first.txt"/>
+            <data_source file="second.txt"/>
+        	<arg line="--help"/>
+            <classpath>
+                <pathelement location="libext/selenium-server.jar"/>
+            </classpath>
+        </robotant>
+    </target>
+
+	<target name="alljar" depends="simplejar, cplxjar, jarbootclass, simplejarargfile, datasource"/>
 	<target name="all" depends="alljar, simpleclass"/>
 
 	<target name="javaclass" depends="declare">
 		<java classname="org.robotframework.RobotFramework">
 			<arg line="--loglevel TRACE"/>
-			<arg value="TestSelenium.html"/>
+			<arg value="rftest/TestSelenium.html"/>
 			<classpath>
-				<pathelement location="robotframework-selenium-2.5.4.1.jar"/>
+				<pathelement location="libext/robotframework-selenium-2.5.4.1.jar"/>
 			</classpath>
 		</java>
 	</target>
 
 	<target name="javajar" depends="declare">
-		<java jar="robotframework-selenium-2.5.4.1.jar" fork="true">
+		<java jar="libext/robotframework-selenium-2.5.4.1.jar" fork="true">
 			<arg line="--loglevel TRACE"/>
-			<arg value="TestSelenium.html"/>
+			<arg value="rftest/TestSelenium.html"/>
 		</java>
 	</target>
 

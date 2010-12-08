@@ -1,6 +1,8 @@
 package org.lcx.robotframework.ant;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
@@ -11,11 +13,12 @@ public class RobotAnt extends Java {
 	
 	public final static String RFJAR	= Messages.getString("rfjar"); //$NON-NLS-1$
 	public final static String RFCLASS	= Messages.getString("rfclass"); //$NON-NLS-1$
+	public final static String SEP		= Messages.getString("separator"); //$NON-NLS-1$
 	
 	private boolean localfork			= false;
 	private boolean forkreceived		= false;
 	
-	private String data_sources			= null;
+//	private String data_sources			= null;
 	private String name					= null;
 	private String suite				= null;
 	private String test					= null;
@@ -23,6 +26,9 @@ public class RobotAnt extends Java {
 	private String loglevel				= null;
 	private String debugfile			= null;
 	private String variablefile			= null;
+
+	private List<Argumentfile> argumentfiles	= new ArrayList<Argumentfile>();
+	private List<Data_Source> data_sources	= new ArrayList<Data_Source>();
 	
 	
 	public RobotAnt() {
@@ -82,37 +88,46 @@ public class RobotAnt extends Java {
 		}
 	
 		if(getName()!=null && getName().trim().length() >0 ){
-			this.createArg("name", getName());
+			this.createValueArg("name", SEP+getName()+SEP);
 		}
 
 		if(getVariablefile()!=null && getVariablefile().trim().length() >0 ){
-			this.createArg("variablefile", getVariablefile());
+			this.createLineArg("variablefile", getVariablefile());
 		}
 
 		if(getLoglevel()!=null && getLoglevel().trim().length() >0 ){
-			this.createArg("loglevel", getLoglevel());
+			this.createLineArg("loglevel", getLoglevel());
 		}
 
 		if(getDebugfile()!=null && getDebugfile().trim().length() >0) {
-			this.createArg("debugfile", getDebugfile());
+			this.createLineArg("debugfile", getDebugfile());
 		}
 
 		if(getOutputdir()!=null && getOutputdir().trim().length() >0) {
-			this.createArg("outputdir", getOutputdir());
+			this.createLineArg("outputdir", getOutputdir());
 		}
 
 		if(getSuite()!=null && getSuite().trim().length() >0) {
-			this.createArg("suite", getSuite());
+			this.createValueArg("suite", SEP+getSuite()+SEP);
 		}
 
 		if(getTest()!=null && getTest().trim().length() >0) {
-			this.createArg("test", getTest());
+			this.createValueArg("test", SEP+getTest()+SEP);
+		}
+
+		if(getArgumentfiles().length>0) {
+			for(String s : getArgumentfiles()) {
+				this.getCommandLine().createArgument().setLine(s);
+			}
 		}
 
 		// always at the end for data_sources
-		if(getData_sources()!=null) {
-			this.getCommandLine().createArgument().setLine(getData_sources());
+		if(getData_sources().length>0) {
+			for(String s : getData_sources()) {
+				this.getCommandLine().createArgument().setLine(s);
+			}
 		}
+		
 	}
 	
 	/**
@@ -120,28 +135,27 @@ public class RobotAnt extends Java {
 	 * @param key
 	 * @param value
 	 */
-	protected void createArg(String key, String value) {
+	protected void createLineArg(String key, String value) {
 		this.getCommandLine().createArgument().setLine(Messages.getString(key)+" "+value);
 	}
 
-    /**
-     * Accessor to the data sources to use.
-     *
-     * @return the robotframework standealone jar file to use.
-     * 
-     */
-	public String getData_sources() {
-		return data_sources;
+	/**
+	 * Create an argument in the command line for given key and value
+	 * @param key
+	 * @param value
+	 */
+	protected void createValueArg(String key, String value) {
+		this.getCommandLine().createArgument().setValue(Messages.getString(key)+" "+value);
 	}
 
-    /**
+	/**
      * Set the data sources to use.
      *
      * @param the data sources to use.
      *
      */
 	public void setData_sources(String dataSources) {
-		data_sources = dataSources;
+		createData_source().setFile(dataSources);
 	}
 
 	/**
@@ -270,8 +284,8 @@ public class RobotAnt extends Java {
     }
 
 	/**
-	 * set local fork
-	 * @return
+	 * Set local fork
+     * @param s fork or not fork, that's the question
 	 */
 	private void setLocalFork(boolean s) {
 		localfork=s;
@@ -285,6 +299,50 @@ public class RobotAnt extends Java {
 	 */
 	public boolean isLocalFork() {
 		return localfork;
+	}
+
+	/**
+	 * Create a argument file to the argument file list
+	 */
+	public Argumentfile createArgumentfile() {
+		Argumentfile af = new Argumentfile();
+		argumentfiles.add(af);
+		return af;
+	}
+
+	/**
+	 * @return the argumentfiles
+	 */
+	public String[] getArgumentfiles() {
+		String[] args = new String[argumentfiles.size()];
+		int i = 0;
+		for(Argumentfile argf : argumentfiles) {
+			args[i] = Messages.getString("argumentfile")+" "+argf.file;
+			i++;
+		}
+		return args;
+	}
+
+	/**
+	 * Create a data source file to the data source list
+	 */
+	public Data_Source createData_source() {
+		Data_Source af = new Data_Source();
+		data_sources.add(af);
+		return af;
+	}
+
+	/**
+	 * @return the data_sources
+	 */
+	public String[] getData_sources() {
+		String[] args = new String[data_sources.size()];
+		int i = 0;
+		for(Data_Source argf : data_sources) {
+			args[i] = argf.file;
+			i++;
+		}
+		return args;
 	}
 		
 }
