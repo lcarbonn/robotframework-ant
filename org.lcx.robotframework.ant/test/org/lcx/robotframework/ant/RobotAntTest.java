@@ -9,14 +9,13 @@ import junit.framework.TestCase;
 public class RobotAntTest extends TestCase {
  
 	public String path="";
-	
+
 	@Override
 	protected void setUp() throws Exception {
 		path = new File("").getAbsolutePath()+"\\";
 		
 	}
 
-	
 	public void testFork1() {
 		RobotAnt rf = new RobotAnt();
 		// case nothing is given
@@ -143,8 +142,8 @@ public class RobotAntTest extends TestCase {
 
 		rf.setArguments();
 
-		assertEquals(1, rf.getData_sources().length);
-		assertEquals("1", rf.getData_sources()[0]);
+		assertEquals(0, rf.getData_Sources_List().length);
+		assertEquals("1", rf.getData_Sources());
 		
 		assertEquals("2", rf.getDebugfile());
 		assertEquals("3", rf.getLoglevel());
@@ -159,7 +158,7 @@ public class RobotAntTest extends TestCase {
 			comline = comline + s +" ";
 		}
 		System.out.println(comline);
-		assertTrue(comline.endsWith("--name '44 44' --variablefile 5 --loglevel 3 --debugfile 2 --outputdir 8 --suite '77 77' --test '66 66' 1 "));
+		assertTrue(comline.endsWith("--name 44 44 --variablefile 5 --loglevel 3 --debugfile 2 --outputdir 8 --suite 77 77 --test 66 66 1 "));
 	}
 
 	public void testArgumentFile() {
@@ -196,8 +195,8 @@ public class RobotAntTest extends TestCase {
 
 		rf.setArguments();
 
-		assertNotNull(rf.getData_sources());
-		assertEquals(8, rf.getData_sources().length);
+		assertNotNull(rf.getData_Sources_List());
+		assertEquals(7, rf.getData_Sources_List().length);
 
 		String comline = "";
 		for(String s : rf.getCommandLine().getCommandline()) {
@@ -206,4 +205,23 @@ public class RobotAntTest extends TestCase {
 		System.out.println(comline);
 		assertTrue(comline.endsWith(" datasource dt2.html dt3.html dt4.html dt5.html dt6.html dt7.html dt8.html "));
 	}
+	
+	public void testXXMaxPermSize() {
+		RobotAnt rf = new RobotAnt();
+		// case jar and fork false
+		rf.setData_sources("datasource");
+		rf.setMaxpermsize("512m");
+
+		rf.setArguments();
+
+		assertNotNull(rf.getMaxpermsize());
+
+		String comline = "";
+		for(String s : rf.getCommandLine().getCommandline()) {
+			comline = comline + s +" ";
+		}
+		System.out.println(comline);
+		assertTrue(comline.contains(" -XX:MaxPermSize=512m "));
+	}
+
 }

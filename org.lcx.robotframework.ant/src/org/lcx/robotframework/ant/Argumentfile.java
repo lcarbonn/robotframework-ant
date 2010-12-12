@@ -3,7 +3,7 @@ package org.lcx.robotframework.ant;
 
 public class Argumentfile {
 
-	String file = null;
+	private String file = null;
 	
 	public Argumentfile() {
 		

@@ -12,6 +12,9 @@
 	<property name="build" location="build"/>
 	<property name="dist"  location="dist"/>
 	<property name="jarfile"  value="ant-robotframework-${version}.jar"/>
+    <property name="rfjar"  value="robotframework-2.5.5.jar"/>
+    <property name="rfseljar"  value="libext/robotframework-selenium-2.5.5.jar"/>
+	<property name="seleniumjar"  value="libext/selenium-server.jar"/>
 
 	<target name="init">
 		<!-- Create the time stamp -->
@@ -64,7 +67,7 @@
 
 	<target name="cplxjar" depends="declare">
 		<robotant 
-        jar="libext/robotframework-selenium-2.5.4.1.jar"
+        jar="${rfseljar}"
         data_sources="rftest/TestSelenium.html"
 		name="TestExecution Result"
         loglevel="TRACE"
@@ -84,7 +87,7 @@
 			<arg line="--loglevel TRACE"/>
 			<arg line="TestSelenium.html"/>
 			<classpath>
-				<pathelement location="libext/selenium-server.jar"/>
+				<pathelement location="${seleniumjar}"/>
 			</classpath>
 		</robotant>
 	</target>
@@ -93,9 +96,7 @@
 		<robotant fork="true">
 			<arg line="--loglevel TRACE"/>
 			<arg line="rftest/TestSelenium.html"/>
-			<bootclasspath>
-				<pathelement location="libext/selenium-server.jar"/>
-			</bootclasspath>
+            <jvmarg line="-Xbootclasspath/a:${seleniumjar}"/>
 		</robotant>
 	</target>
 
@@ -103,9 +104,10 @@
 		<robotant>
 			<arg line="--loglevel TRACE"/>
 			<arg line="rftest/TestSelenium.html"/>
-			<bootclasspath>
-				<pathelement location="libext/selenium-server.jar"/>
-			</bootclasspath>
+            <bootclasspath>
+              <pathelement location="${seleniumjar}"/>
+              <pathelement path="${java.class.path}"/>
+            </bootclasspath>           
 		</robotant>
 	</target>
 
@@ -113,40 +115,61 @@
         <robotant data_sources="rftest/TestSelenium.html">
             <argumentfile file="rftest/first.txt"/>
             <argumentfile file="rftest/second.txt"/>
-            <bootclasspath>
-                <pathelement location="libext/selenium-server.jar"/>
-            </bootclasspath>
+            <jvmarg line="-Xbootclasspath/a:${seleniumjar}"/>
         </robotant>
     </target>
 
     <target name="datasource" depends="declare">
-        <robotant data_sources="rftest/TestSelenium.html" jar="libext/robotframework-selenium-2.5.4.1.jar">
+        <robotant data_sources="rftest/TestSelenium.html"
+        	jar="${rfjar}">
             <data_source file="first.txt"/>
             <data_source file="second.txt"/>
         	<arg line="--help"/>
-            <classpath>
-                <pathelement location="libext/selenium-server.jar"/>
-            </classpath>
+            <jvmarg line="-Xbootclasspath/a:${seleniumjar}"/>
         </robotant>
     </target>
+	
+    <target name="robotant" depends="declare">
+        <robotant 
+            jar="${rfjar}"
+            data_sources="TestSamples TestSamples2"
+            name="Test Samples"
+            loglevel="TRACE"
+            debugfile="robotant.log"
+            outputdir="resultats"
+            suite="Test Widgets"
+            test="test case"
+            maxmemory="512m"
+            maxpermsize="256m"
+            >
+           <data_source file="Test Samples3"/>
+           <jvmarg line="-Xbootclasspath/a:lib/eclipselibrary-0.13-with-dependencies-e36.jar"/>
+       </robotant>
+    </target>	
 
 	<target name="alljar" depends="simplejar, cplxjar, jarbootclass, simplejarargfile, datasource"/>
 	<target name="all" depends="alljar, simpleclass"/>
 
-	<target name="javaclass" depends="declare">
+	<target name="javaclass">
 		<java classname="org.robotframework.RobotFramework">
 			<arg line="--loglevel TRACE"/>
 			<arg value="rftest/TestSelenium.html"/>
 			<classpath>
-				<pathelement location="libext/robotframework-selenium-2.5.4.1.jar"/>
+				<pathelement location="${rfseljar}"/>
 			</classpath>
 		</java>
 	</target>
 
-	<target name="javajar" depends="declare">
-		<java jar="libext/robotframework-selenium-2.5.4.1.jar" fork="true">
+	<target name="javajar">
+		<java jar="${rfseljar}" fork="true">
 			<arg line="--loglevel TRACE"/>
 			<arg value="rftest/TestSelenium.html"/>
+            <bootclasspath>
+                <pathelement location="${rfseljar}"/>
+            </bootclasspath>
+            <bootclasspath>
+                <pathelement location="${seleniumjar}"/>
+            </bootclasspath>
 		</java>
 	</target>
 
