@@ -13,12 +13,12 @@ public class RobotAnt extends Java {
 	
 	public final static String RFJAR	= Messages.getString("rfjar"); //$NON-NLS-1$
 	public final static String RFCLASS	= Messages.getString("rfclass"); //$NON-NLS-1$
-	public final static String SEP		= Messages.getString("separator"); //$NON-NLS-1$
+	public final static String QUOTE	= Messages.getString("separator"); //$NON-NLS-1$
 	
 	private boolean localfork			= false;
 	private boolean forkreceived		= false;
 	
-//	private String data_sources			= null;
+	private String data_sources			= null;
 	private String name					= null;
 	private String suite				= null;
 	private String test					= null;
@@ -27,9 +27,10 @@ public class RobotAnt extends Java {
 	private String debugfile			= null;
 	private String variablefile			= null;
 
+	private String maxpermsize			= null;
+
 	private List<Argumentfile> argumentfiles	= new ArrayList<Argumentfile>();
-	private List<Data_Source> data_sources	= new ArrayList<Data_Source>();
-	
+	private List<Data_Source> data_sources_list	= new ArrayList<Data_Source>();
 	
 	public RobotAnt() {
 		super();
@@ -88,7 +89,7 @@ public class RobotAnt extends Java {
 		}
 	
 		if(getName()!=null && getName().trim().length() >0 ){
-			this.createValueArg("name", SEP+getName()+SEP);
+			this.createLineQuotedArg("name", getName());
 		}
 
 		if(getVariablefile()!=null && getVariablefile().trim().length() >0 ){
@@ -108,11 +109,11 @@ public class RobotAnt extends Java {
 		}
 
 		if(getSuite()!=null && getSuite().trim().length() >0) {
-			this.createValueArg("suite", SEP+getSuite()+SEP);
+			this.createLineQuotedArg("suite", getSuite());
 		}
 
 		if(getTest()!=null && getTest().trim().length() >0) {
-			this.createValueArg("test", SEP+getTest()+SEP);
+			this.createLineQuotedArg("test", getTest());
 		}
 
 		if(getArgumentfiles().length>0) {
@@ -120,11 +121,18 @@ public class RobotAnt extends Java {
 				this.getCommandLine().createArgument().setLine(s);
 			}
 		}
+		
+		if(getMaxpermsize()!=null && getMaxpermsize().length()>0) {
+			this.getCommandLine().createVmArgument().setValue(Messages.getString("MaxPermSize")+"="+getMaxpermsize());
+		}
 
 		// always at the end for data_sources
-		if(getData_sources().length>0) {
-			for(String s : getData_sources()) {
-				this.getCommandLine().createArgument().setLine(s);
+		if(getData_Sources()!=null && getData_Sources().length()>0) {
+			this.getCommandLine().createArgument().setLine(getData_Sources());
+		}
+		if(getData_Sources_List().length>0) {
+			for(String s : getData_Sources_List()) {
+				this.getCommandLine().createArgument().setLine(QUOTE + s + QUOTE);
 			}
 		}
 		
@@ -140,12 +148,13 @@ public class RobotAnt extends Java {
 	}
 
 	/**
-	 * Create an argument in the command line for given key and value
+	 * Create an argument in the command line for given key and "value"
 	 * @param key
 	 * @param value
 	 */
-	protected void createValueArg(String key, String value) {
-		this.getCommandLine().createArgument().setValue(Messages.getString(key)+" "+value);
+	protected void createLineQuotedArg(String key, String value) {
+		this.getCommandLine().createArgument().setLine(Messages.getString(key)+" "+ QUOTE +value + QUOTE);
+		//this.createLineArg(Messages.getString(key), QUOTE +value + QUOTE);
 	}
 
 	/**
@@ -154,8 +163,12 @@ public class RobotAnt extends Java {
      * @param the data sources to use.
      *
      */
-	public void setData_sources(String dataSources) {
-		createData_source().setFile(dataSources);
+	public void setData_sources(String s) {
+		this.data_sources = s;
+	}
+	
+	public String getData_Sources() {
+		return this.data_sources;
 	}
 
 	/**
@@ -317,7 +330,7 @@ public class RobotAnt extends Java {
 		String[] args = new String[argumentfiles.size()];
 		int i = 0;
 		for(Argumentfile argf : argumentfiles) {
-			args[i] = Messages.getString("argumentfile")+" "+argf.file;
+			args[i] = Messages.getString("argumentfile")+" "+argf.getFile();
 			i++;
 		}
 		return args;
@@ -328,21 +341,32 @@ public class RobotAnt extends Java {
 	 */
 	public Data_Source createData_source() {
 		Data_Source af = new Data_Source();
-		data_sources.add(af);
+		data_sources_list.add(af);
 		return af;
 	}
 
 	/**
 	 * @return the data_sources
 	 */
-	public String[] getData_sources() {
-		String[] args = new String[data_sources.size()];
+	public String[] getData_Sources_List() {
+		String[] args = new String[data_sources_list.size()];
 		int i = 0;
-		for(Data_Source argf : data_sources) {
-			args[i] = argf.file;
+		for(Data_Source argf : data_sources_list) {
+			args[i] = argf.getFile();
 			i++;
 		}
 		return args;
 	}
-		
+
+	public void setMaxpermsize(String s) {
+		this.maxpermsize = s;
+	}
+
+	/**
+	 * @return the maxpermsize
+	 */
+	public String getMaxpermsize() {
+		return maxpermsize;
+	}
+
 }
