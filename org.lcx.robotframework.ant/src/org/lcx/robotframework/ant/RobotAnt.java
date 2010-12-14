@@ -1,3 +1,6 @@
+/*
+ * Copyright 2010 L. Carbonnaux
+ */
 package org.lcx.robotframework.ant;
 
 import java.io.File;
@@ -73,18 +76,18 @@ public class RobotAnt extends Java {
 		
 		if(!forkreceived && this.getCommandLine().getJar()==null && 
 				this.getCommandLine().getClassname()==null) {
-			this.setJar(new File(RFJAR));
+			this.setJar(new File(getRFJar()));
 			this.setLocalFork(true);
 		}
 		
 		if(forkreceived && localfork && this.getCommandLine().getJar()==null && 
 				this.getCommandLine().getClassname()==null) {
-			this.setJar(new File(RFJAR));
+			this.setJar(new File(getRFJar()));
 		}
 
 		if(forkreceived && !localfork && this.getCommandLine().getClassname()==null) {
 			this.setClassname(RFCLASS);
-			Path p = new Path(this.getProject(), RFJAR);
+			Path p = new Path(this.getProject(), getRFJar());
 			this.createClasspath().append(p);
 		}
 	
@@ -369,4 +372,15 @@ public class RobotAnt extends Java {
 		return maxpermsize;
 	}
 
+	private String getRFJar() {
+		if(new File(RFJAR).canRead()) {
+			return RFJAR;
+		} else if (new File("lib/"+RFJAR).canRead()) {
+			return ("lib/"+RFJAR);
+		} else if (new File("libext/"+RFJAR).canRead()) {
+			return ("libext/"+RFJAR);
+		}  else {
+            throw new BuildException("Cannot find "+RFJAR+" jar in . or ./lib or ./libext folders");
+		}
+	}
 }
