@@ -20,7 +20,7 @@
   <build>
 
     <sourceDirectory>../../src</sourceDirectory>
-    <outputDirectory>sonar/target/classes</outputDirectory>
+    <outputDirectory>../../build</outputDirectory>
 
   </build>
 
