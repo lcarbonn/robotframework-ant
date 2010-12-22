@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<project name="RobotAnt" default="alljar" basedir=".">
+<project name="RobotAnt" default="createjar" basedir=".">
 
 	<description>
         build file for RobotFramework Ant task
