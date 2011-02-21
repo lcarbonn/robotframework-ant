@@ -62,7 +62,7 @@ public class RobotAnt extends Java {
 		// set rf jar if given as argument
 		// if jar is given force fork to use external VM
         if (getCommandLine().getClassname() != null) {
-            throw new BuildException("Cannot set 'classname' attribute in robotframework task.");
+            throw new BuildException("Cannot set 'classname' attribute in robotant task.");
         }
         
         if (forkreceived && !localfork && getCommandLine().getJar() != null) {

@@ -12,7 +12,7 @@
 	<property name="build" location="build"/>
 	<property name="dist"  location="dist"/>
 	<property name="jarfile"  value="ant-robotframework-${version}.jar"/>
-    <property name="rfjar"  value="robotframework-2.5.5.jar"/>
+    <property name="rfjar"  value="libext/robotframework-2.5.6.jar"/>
     <property name="rfseljar"  value="libext/robotframework-selenium-2.5.5.jar"/>
 	<property name="seleniumjar"  value="libext/selenium-server.jar"/>
 
@@ -51,11 +51,14 @@
 				<attribute name="Built-By" value="Laurent Carbonnaux"/>
 				<!-- Information about the program itself -->
 				<attribute name="Implementation-Vendor" value="ScrumVision.org"/>
-				<attribute name="Implementation-Title" value="RobotframeworkAnt"/>
+				<attribute name="Implementation-Title" value="RobotAnt"/>
 				<attribute name="Implementation-Version" value="${version}"/>
 			</manifest>
 
 		</jar>
+	</target>
+  
+  <target name="dist" depends="createjar">
 	</target>
 
 
