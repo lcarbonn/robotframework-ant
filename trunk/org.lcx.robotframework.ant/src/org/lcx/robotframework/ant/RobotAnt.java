@@ -1,5 +1,5 @@
 /*
- * Copyright 2010 L. Carbonnaux
+ * Copyright 2011 L. Carbonnaux
  */
 package org.lcx.robotframework.ant;
 
@@ -17,9 +17,6 @@ public class RobotAnt extends Java {
 	public final static String RFJAR	= Messages.getString("rfjar"); //$NON-NLS-1$
 	public final static String RFCLASS	= Messages.getString("rfclass"); //$NON-NLS-1$
 	public final static String QUOTE	= Messages.getString("separator"); //$NON-NLS-1$
-	
-	private boolean localfork			= false;
-	private boolean forkreceived		= false;
 	
 	private String data_sources			= null;
 	private String name					= null;
@@ -50,47 +47,60 @@ public class RobotAnt extends Java {
      */
 	@Override
 	public void execute() throws BuildException {
-		this.setArguments();
+		this.checkJVMArguments();
+		this.createCommandLine();
+		super.checkConfiguration();
 		super.execute();
 	}
 	
 	/**
-	 * Set the RF parameters from the given ant parameters 
+	 * Set the JVM parameters from the given ant arguments
 	 */
-	protected void setArguments() throws BuildException {
+	protected void checkJVMArguments() throws BuildException {
 
-		// set rf jar if given as argument
-		// if jar is given force fork to use external VM
+		// Reject if classname attribute received
         if (getCommandLine().getClassname() != null) {
             throw new BuildException("Cannot set 'classname' attribute in robotant task.");
         }
-        
-        if (forkreceived && !localfork && getCommandLine().getJar() != null) {
-            throw new BuildException("Cannot execute a jar in non-forked mode."
-                                     + " Please set fork='true'. ");
-        }
 
-        if(!forkreceived && this.getCommandLine().getJar()!=null) {
-			this.setLocalFork(true);
-		}
-		
-		if(!forkreceived && this.getCommandLine().getJar()==null && 
-				this.getCommandLine().getClassname()==null) {
-			this.setJar(new File(getRFJar()));
-			this.setLocalFork(true);
-		}
-		
-		if(forkreceived && localfork && this.getCommandLine().getJar()==null && 
-				this.getCommandLine().getClassname()==null) {
-			this.setJar(new File(getRFJar()));
-		}
+//		// Reject if jar attribute received and fork is false
+//        if (!localfork && getCommandLine().getJar() != null) {
+//            throw new BuildException("Cannot execute a jar in non-forked mode."
+//                                     + " Please set fork='true'. ");
+//        }
 
-		if(forkreceived && !localfork && this.getCommandLine().getClassname()==null) {
+//        // if jar received, force fork
+//        if(this.getCommandLine().getJar()!=null) {
+//			this.setLocalFork(true);
+//		}
+
+        // if nothing received,
+        // set classname to default
+        // search jar in classpath or folders
+		if(this.getCommandLine().getJar()==null &&
+				this.getCommandLine().getClassname()==null) {
 			this.setClassname(RFCLASS);
-			Path p = new Path(this.getProject(), getRFJar());
-			this.createClasspath().append(p);
+			// search if class is in classpath
+			try {
+				Class.forName(RFCLASS);
+			} catch (ClassNotFoundException e) {
+				// if not in classpath and classpath not received
+				// , search for jar in default folders
+				// to add in classpath
+//				if(this.getCommandLine().getClasspath()==null) {
+					Path p = new Path(this.getProject(), getRFJar());
+					this.createClasspath().append(p);
+//				}
+//				this.setJar(new File(getRFJar()));
+			}
 		}
 	
+	}
+
+	/**
+	 * Set the RF parameters from the given ant arguments
+	 */
+	protected void createCommandLine() throws BuildException {
 		if(getName()!=null && getName().trim().length() >0 ){
 			this.createLineQuotedArg("name", getName());
 		}
@@ -138,7 +148,7 @@ public class RobotAnt extends Java {
 				this.getCommandLine().createArgument().setLine(QUOTE + s + QUOTE);
 			}
 		}
-		
+
 	}
 	
 	/**
@@ -287,36 +297,6 @@ public class RobotAnt extends Java {
 		this.variablefile = variablefile;
 	}
 
-    /**
-     * If true, execute in a new VM.
-     *
-     * @param s do you want to run Java in a new VM.
-     */
-	@Override
-    public void setFork(boolean s) throws BuildException {
-		forkreceived=true;
-		localfork=s;
-        super.setFork(s);
-    }
-
-	/**
-	 * Set local fork
-     * @param s fork or not fork, that's the question
-	 */
-	private void setLocalFork(boolean s) {
-		localfork=s;
-        super.setFork(s);
-	}
-
-	/**
-	 * Is process is fork
-	 * Method is public for unit test
-	 * @return
-	 */
-	public boolean isLocalFork() {
-		return localfork;
-	}
-
 	/**
 	 * Create a argument file to the argument file list
 	 */
@@ -380,7 +360,8 @@ public class RobotAnt extends Java {
 		} else if (new File("libext/"+RFJAR).canRead()) {
 			return ("libext/"+RFJAR);
 		}  else {
-            throw new BuildException("Cannot find "+RFJAR+" jar in . or ./lib or ./libext folders");
+            throw new BuildException("Cannot find "+RFJAR+" jar in classpath, rfjarpath, ./, ./lib, ./libext folders");
 		}
 	}
+
 }
