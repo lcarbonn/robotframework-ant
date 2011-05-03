@@ -1,0 +1,101 @@
+<?xml version="1.0"?>
+<project name="RobotAnt" default="simpleTest" basedir=".">
+
+	<description>
+		Test file for RobotFramework Ant task
+	</description>
+
+	<property name="robotant"  value="../dist/ant-robotframework-0.6.jar"/>
+	<property name="selenium"  value="startselenium.bat"/>
+	<!--property name="robotframework"  value="lib/robotframework-2.5.6.jar"/-->
+	<taskdef name="robotant"
+		classname="org.lcx.robotframework.ant.RobotAnt"
+		classpath="${robotant}">
+	</taskdef>
+
+	
+	<target name="startselenium">
+	  <exec executable="cmd">
+	    <arg value="/c"/>
+	    <arg value="${selenium}"/>
+	  </exec>
+	</target>
+	
+    <target name="simpleTest" depends="startselenium">
+	  <robotant 
+        data_sources="TestSelenium.html"
+        loglevel="INFO"
+        debugfile="jybot.log"
+        outputdir="results"
+        maxmemory="512m">
+      </robotant>
+    </target>
+	
+    <target name="errorClass">
+	  <robotant 
+	    classname="should.not.work">
+      </robotant>
+    </target>
+
+    <target name="forkTest" depends="startselenium">
+	  <robotant 
+        data_sources="TestSelenium.html"
+        loglevel="INFO"
+        debugfile="jybot.log"
+        outputdir="results"
+        maxmemory="512m"
+		fork="true">
+      </robotant>
+    </target>
+
+    <target name="cpForkTest" depends="startselenium">
+	  <robotant 
+        data_sources="TestSelenium.html"
+        loglevel="INFO"
+        debugfile="jybot.log"
+        outputdir="results"
+        maxmemory="512m"
+		fork="true">
+		<classpath>
+			<pathelement location="libext/robotframework-2.5.5.jar"/>
+			<pathelement location="lib/Lib"/>
+		</classpath>
+      </robotant>
+    </target>
+	
+    <target name="cpTest" depends="startselenium">
+	  <robotant 
+        data_sources="TestSelenium.html"
+        loglevel="INFO"
+        debugfile="jybot.log"
+        outputdir="results"
+        maxmemory="512m">
+		<classpath>
+			<pathelement location="libext/robotframework-2.5.5.jar"/>
+			<pathelement location="lib/Lib"/>
+		</classpath>
+      </robotant>
+    </target>
+
+	<target name="cplxjarTest" depends="startselenium">
+		<robotant 
+        jar="libext/robotframework-selenium-2.5.5.jar"
+		fork="true"
+        data_sources="TestSelenium.html"
+		name="TestExecution Result"
+        loglevel="TRACE"
+        debugfile="jybot.log"
+        outputdir="resultats"
+    	suite="TestSelenium"
+    	test="'Test search on google'"
+		variablefile="path/vars.py"
+        >
+			<arg line="--version"/>
+            <arg line="--variable str:Hello"/>
+		</robotant>
+	</target>
+
+	<target name="all" 
+		depends="simpleTest"/>
+
+</project>
