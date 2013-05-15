@@ -5,7 +5,7 @@
 		Test file for RobotFramework Ant task
 	</description>
 
-	<property name="robotant"  value="../dist/ant-robotframework-0.6.jar"/>
+	<property name="robotant"  value="../dist/ant-robotframework-0.7.jar"/>
 	<property name="selenium"  value="startselenium.bat"/>
 	<!--property name="robotframework"  value="lib/robotframework-2.5.6.jar"/-->
 	<taskdef name="robotant"
@@ -57,7 +57,7 @@
         maxmemory="512m"
 		fork="true">
 		<classpath>
-			<pathelement location="libext/robotframework-2.5.5.jar"/>
+			<pathelement location="libext/robotframework-2.7.7.jar"/>
 			<pathelement location="lib/Lib"/>
 		</classpath>
       </robotant>
@@ -71,7 +71,7 @@
         outputdir="results"
         maxmemory="512m">
 		<classpath>
-			<pathelement location="libext/robotframework-2.5.5.jar"/>
+			<pathelement location="libext/robotframework-2.7.7.jar"/>
 			<pathelement location="lib/Lib"/>
 		</classpath>
       </robotant>
@@ -79,7 +79,7 @@
 
 	<target name="cplxjarTest" depends="startselenium">
 		<robotant 
-        jar="libext/robotframework-selenium-2.5.5.jar"
+        jar="libext/robotframework-selenium-2.7.7.jar"
 		fork="true"
         data_sources="TestSelenium.html"
 		name="TestExecution Result"
